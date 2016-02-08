@@ -1,0 +1,13 @@
+{
+    "require": {
+      "tedivm/jshrink": "1.1.*"
+    },
+	"scripts": {
+	  "post-install-cmd": [
+	    "bower install"
+	  ],
+	  "post-update-cmd": [
+	    "bower install"
+	  ]
+	}
+}
