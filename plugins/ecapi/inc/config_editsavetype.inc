@@ -26,7 +26,8 @@ if( !isset($json->{"mks:types"}->$typeid) )
 foreach( $_POST as $a => $v)
 	switch( $a ) {
 		case 'localise':
-			$json->{"mks:types"}->$typeid->localise = stripslashes($v);
+			$js = stripslashes($v);
+			$json->{"mks:types"}->$typeid->localise = \JShrink\Minifier::minify($js);
 			break;
 		case 'query_text':
 			$json->{"mks:types"}->$typeid->query_text = stripslashes($v);

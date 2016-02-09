@@ -37,6 +37,7 @@ class DataApis
      * Initializes the plugin by setting filters and administration functions.
      */
     private function __construct() {
+    	require __DIR__ . '/vendor/autoload.php';
         $this->templates = array();
         
         add_filter('body_class', array(
@@ -146,6 +147,13 @@ function ecapi_admin_init() {
     add_settings_field('ecapi_config_db_password', 'CouchDB password', 'ecapi_setting_config_db_password', 'ecapi-settings', 'ecapi_main');
 }
 
+function ecapi_admin_intercept() {
+	// Intercept POSTs so that no WordPress stuff is printed before redirecting
+	if( $_SERVER['REQUEST_METHOD'] === 'POST' 
+		&& array_key_exists('page', $_POST) && 'ecapi-config' === $_POST['page'] ) 
+		ecapi_config_page();
+}
+
 function ecapi_config_page() {
     require_once dirname(__FILE__) . '/inc/ecapiconfigform/couchdb.class.php';
 	include dirname(__FILE__) . '/config.php';
@@ -210,76 +218,64 @@ function ecapi_setting_url() {
 /**
  * Loads necessary scripts
  */
+function add_scripts(){
+    $plugdir = dirname(__FILE__) . '/ecapi'; // Stupid Wordpress function plugins_url going bananas
+    $script_table = array(
+    	array( 'prism', 'vendor/bower/prism/prism.js', array() )
+    );
+    foreach( $script_table as $k => $v )
+    	wp_register_script( $v[0], plugins_url($v[1], $plugdir), $v[2] );
+    foreach( $script_table as $k => $v )
+    	wp_enqueue_script($v[0]);
+    
+    wp_register_style('prism', plugins_url('vendor/bower/prism/themes/prism.css', $plugdir), array(), '20120208', 'all');
+    wp_enqueue_style('prism');
+}
+
 function wptuts_scripts_with_the_lot() {
     $plugdir = dirname(__FILE__) . '/ecapi'; // Stupid Wordpress function plugins_url going bananas
-    wp_register_script('shred', plugins_url('lib/swagger-ui/lib/shred.bundle.js', $plugdir), FALSE);
-    wp_deregister_script('jquery'); // Foggin' noConflict crap
-    wp_register_script('jquery', plugins_url('lib/jquery/jquery-1.10.2.min.js', $plugdir), FALSE);
-	
-    // typeahead.js
-	wp_register_script('typeahead.js', plugins_url('lib/typeahead.js/typeahead.bundle.min.js', $plugdir), array(
-        'jquery'
-    ));	
-	wp_register_script('jquery-blockui', plugins_url('lib/jquery/jquery.blockUI-2.70.0.min.js', $plugdir), array(
-        'jquery'
-    ));
-	
-    // jQuery dependencies for Swagger
-    wp_register_script('jquery-slideto', plugins_url('lib/swagger-ui/lib/jquery.slideto.min.js', $plugdir), array(
-        'jquery'
-    ));
-    wp_register_script('jquery-wiggle', plugins_url('lib/swagger-ui/lib/jquery.wiggle.min.js', $plugdir), array(
-        'jquery'
-    ));
-    wp_register_script('jquery-ba-bbq', plugins_url('lib/swagger-ui/lib/jquery.ba-bbq.min.js', $plugdir), array(
-        'jquery'
-    ));
-    wp_register_script('swagger', plugins_url('lib/swagger-ui/lib/swagger.js', $plugdir), array(
-        'jquery'
-    ), '2.0.47');
-    wp_register_script('handlebars', plugins_url('lib/swagger-ui/lib/handlebars-1.0.0.js', $plugdir), array(
-        'jquery'
-    ));
+    $script_table = array(
+    	array( 'jquery-blockui', 'vendor/bower/blockui/jquery.blockUI.js', array('jquery') ),
+    	array( 'typeahead.js', 'vendor/bower/typeahead.js/dist/typeahead.bundle.min.js', array('jquery') ),
+    	array( 'jquery-slideto', 'vendor/bower/swagger-ui/dist/lib/jquery.slideto.min.js', array('jquery') ),
+    	array( 'jquery-wiggle', 'vendor/bower/swagger-ui/dist/lib/jquery.wiggle.min.js', array('jquery') ),
+    	array( 'jquery-slideto', 'vendor/bower/swagger-ui/dist/lib/jquery.slideto.min.js', array('jquery') ),
+    	array( 'jquery-ba-bbq', 'vendor/bower/swagger-ui/dist/lib/jquery.ba-bbq.min.js', array('jquery') ),
+    	array( 'handlebars', 'vendor/bower/swagger-ui/dist/lib/handlebars-2.0.0.js', array('jquery') ),
+    	array( 'swagger-client', 'vendor/bower/swagger-js/browser/swagger-client.min.js', array('swagger') ),
+    	array( 'swagger-ui', 'vendor/bower/swagger-ui/dist/swagger-ui.min.js', array('swagger') ),
+    	array( 'highlight', 'vendor/bower/swagger-ui/dist/lib/highlight.7.3.pack.js', array('jquery') ),
+    );
+
+    // wp_register_script('shred', plugins_url('vendor/bower/swagger-ui/dist/lib/shred.bundle.js', $plugdir), FALSE);
+    // wp_deregister_script('jquery'); // Foggin' noConflict crap
+    // wp_register_script('jquery', plugins_url('lib/jquery/jquery-1.10.2.min.js', $plugdir), FALSE);
     // Underscore and Backbone need to be in the head.
     wp_deregister_script('underscore');
-    wp_register_script('underscore', plugins_url('lib/swagger-ui/lib/underscore-min.js', $plugdir), FALSE);
+    wp_register_script('underscore', plugins_url('vendor/bower/swagger-ui/dist/lib/underscore-min.js', $plugdir), FALSE);
     wp_deregister_script('backbone');
-    wp_register_script('backbone', plugins_url('lib/swagger-ui/lib/backbone-min.js', $plugdir), FALSE);
-    // Swagger tax
-    wp_register_script('swagger-client', plugins_url('lib/swagger-ui/lib/swagger-client.js', $plugdir), array(
-        'swagger'
-    ));
-    wp_register_script('swagger-ui', plugins_url('lib/swagger-ui/swagger-ui.min.js', $plugdir), array(
-        'swagger'
-    ));
-    wp_register_script('highlight', plugins_url('lib/swagger-ui/lib/highlight.7.3.pack.js', $plugdir), array(
-        'jquery'
-    ));
+    wp_register_script('backbone', plugins_url('vendor/bower/swagger-ui/dist/lib/backbone-min.js', $plugdir), FALSE);
     
-    wp_enqueue_script('shred');
-    wp_enqueue_script('jquery');
-    wp_enqueue_script('jquery-blockui');
-	wp_enqueue_script('typeahead.js');
-    wp_enqueue_script('jquery-slideto');
-    wp_enqueue_script('jquery-wiggle');
-    wp_enqueue_script('jquery-ba-bbq');
+    foreach( $script_table as $k => $v )
+    	wp_register_script( $v[0], plugins_url($v[1], $plugdir), $v[2] );
+    
+    // wp_enqueue_script('shred');
+    // wp_enqueue_script('jquery');
     wp_enqueue_script('underscore');
     wp_enqueue_script('backbone');
-    wp_enqueue_script('handlebars');
-    wp_enqueue_script('swagger');
-    wp_enqueue_script('swagger-client');
-    wp_enqueue_script('swagger-ui');
-    wp_enqueue_script('highlight');
+
+    foreach( $script_table as $k => $v )
+    	wp_enqueue_script($v[0]);
 }
 
 /**
  * Loads necessary stylesheets
  */
 function wptuts_styles_with_the_lot() {
-    $plugdir = dirname(__FILE__) . '/ecapi'; // Stupid Wordpress function plugins_url going bananas
+    $plugdir = dirname(__FILE__) . '/ecapi'; // Stupid WordPress function plugins_url going bananas
     // Swagger and custom styles
     // wp_register_style('swaggerui-reset', plugins_url('lib/swagger-ui/css/reset.css', $plugdir), array(), '20120208', 'all');
-    wp_register_style('swaggerui-screen', plugins_url('lib/swagger-ui/css/screen.css', $plugdir), array(), '20120208', 'all');
+    wp_register_style('swaggerui-screen', plugins_url('vendor/bower/swagger-ui/dist/css/screen.css', $plugdir), array(), '20120208', 'all');
     wp_register_style('ecapi-custom', plugins_url('css/style.css', $plugdir), array(), '20120208', 'all');
     
     // wp_enqueue_style('swaggerui-reset');
@@ -290,7 +286,6 @@ function wptuts_styles_with_the_lot() {
 /*************************
  ********* INIT **********
  *************************/
-
 add_action('wp_enqueue_scripts', 'wptuts_scripts_with_the_lot');
 add_action('wp_enqueue_scripts', 'wptuts_styles_with_the_lot');
 add_action('plugins_loaded', array(
@@ -299,3 +294,6 @@ add_action('plugins_loaded', array(
 ));
 add_action('admin_menu', 'ecapi_admin_add_page_settings');
 add_action('admin_init', 'ecapi_admin_init');
+add_action('admin_init', 'ecapi_admin_intercept');
+add_action( 'wp_print_scripts', 'add_scripts' );
+

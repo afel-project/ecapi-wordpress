@@ -33,9 +33,9 @@ if( $opts && is_array($opts) ) {
 	<p>With the <a href="/tutorials/exploring-data-by-entity/">entity-centric API</a>, the MK Data Hub enables users and applications to obtain data aggregated from multiple, open sources around specific entities (places, topics, etc.). Through this page, you can preview city data for your application to use.</p>
 	<p>To obtain data about an entity, select its type from the drop-down box, enter its identifier (or select a suggested one as you type) and click the Lookup button.</p>
 <!--  Here you can explore aggregated <em>open data</em> about MK-related entities that you know of, such as an administrative region with a postcode. You will need to know what <strong>type</strong> of entity you are looking for, and an <strong>identifier</strong> for it. Enter them in the lookup form below to display aggregated JSON data for the corresponding entity. -->
-</p>
+	<?php if( !empty($api_root) ) : ?>
 	<section>
-	<?php if( !empty($api_root) ) :
+	<?php
 		include dirname(__FILE__) . '/../lib/curl-client.php';
 		$rez = doCurl( $api_root, 'GET', NULL, array( 'accept' => 'application/json' ) );
 		$obj = json_decode( $rez['body'] );
@@ -75,6 +75,8 @@ if( $opts && is_array($opts) ) {
 <?php 	else : // !empty($obj) ?>
 	<div style="color:#f00">Error: failed to ping entity-centric API at <a href="<?php print $api_root ?>"><?php print $api_root ?></a>. Lookup form could not be created. Please try later or contact the Data Hub administrator.</div>
 <?php 	endif; // !empty($obj) ?>
+<?php else : // empty($api_root) ?>
+<div style="color:#f00">Error: entity-centric API not setup. Lookup form could not be created. Please try later or contact the Data Hub administrator.</div>
 <?php endif; // empty($api_root) ?>
 <!--	
 	<p>Tip: if you do not enter any identifier, the service will display a raw JSON representation of the type description.</p> 

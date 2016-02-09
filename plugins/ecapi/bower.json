@@ -1,8 +1,10 @@
 {
     "name": "ecapi-wordpress-plugin",
     "dependencies": {
-        "typeahead.js": "0.11.*",
+        "blockui"     : "*",
+        "prism"       : "1.4.*",
+        "swagger-js"  : "2.1.*",
         "swagger-ui"  : "2.1.*",
-        "blockui"     : "*"
+        "typeahead.js": "0.11.*"
     }
 }

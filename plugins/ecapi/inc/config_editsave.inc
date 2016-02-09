@@ -1,4 +1,3 @@
-<h1></h1>
 <?php
 if( !(isset($_POST['action']) && $_POST['action'] == 'save') )
 	die("Invalid action");
@@ -19,11 +18,11 @@ if( !isset($_POST['_rev']) )
 if( $_rev !== $_POST['_rev'] )
 	die("Revision number mismatch! Expected '<span style=\"color:#f00\">{$_POST['_rev']}</span>', but latest is '<span style=\"color:#f00\">$_rev</span>'");
 
-if( !isset($_POST ['debug']) ) unset( $json->debug );
+if( !isset($_POST ['debug']) ) unset($json->debug);
 foreach( $_POST as $a=>$v)
 	switch( $a ) {
 		case 'cache':
-			$json->{"mks:cache-lifetime"} = $v;
+			$json->{"mks:cache-lifetime"} = intval($v);
 			break;
 		case 'debug':
 			$json->debug = TRUE;
@@ -39,8 +38,9 @@ foreach( $_POST as $a=>$v)
 			break;
 	}
 $response = $dbms->saveDoc( $_id, $json );
-if( $response['data']->ok == 1 )
-	wp_redirect (  home_url() . '/wp-admin/admin.php?page=ecapi-config&action=view&id=' . urlencode($_id) );
-else {
+if( $response['data']->ok == 1 ) {
+	$redi = home_url() . '/wp-admin?page=ecapi-config&action=view&id=' . urlencode($_id);
+	wp_redirect( $redi ); exit;
+} else {
 	die("FAIL:<pre>". print_r( $response,TRUE ). "</pre>");
 }

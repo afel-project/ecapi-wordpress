@@ -12,7 +12,7 @@
 #ecapi_lookup select{ padding:4px }
 #ecapi_lookup span.hider,
 #ecapi_lookup span.response_throbber{ float: right; margin:10px }
-#ecapi_lookup span.response_throbber { background-image: url("../lib/swagger-ui/images/throbber.gif"); clear: none; display: block; height: 16px; width: 128px; }
+#ecapi_lookup span.response_throbber { background-image: url("../vendor/bower/swagger-ui/dist/images/throbber.gif"); clear: none; display: block; height: 16px; width: 128px; }
 #ecapi_lookup span.twitter-typeahead{ vertical-align:top }
 
 #ecapi_lookup_result pre{ background-color:#fcf6db; border:1px solid #e5e0c6; padding:5px }
