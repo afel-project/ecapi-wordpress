@@ -17,4 +17,6 @@ Then, assuming Composer is installed either there or globally on your system:
 
     $ php composer.phar install
 
+The above command will also run Bower automatically as a post-install hook.
+
 Finally, stage the whole `ecapi` directory into the `wp-content/plugins` of your Wordpress.
