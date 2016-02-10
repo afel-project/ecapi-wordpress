@@ -1,4 +1,18 @@
 <?php
+
+function formatLifetime($milliseconds) {
+    $seconds = floor($milliseconds / 1000);
+    $minutes = floor($seconds / 60);
+    $hours = floor($minutes / 60);
+    $milliseconds = $milliseconds % 1000;
+    $seconds = $seconds % 60;
+    $minutes = $minutes % 60;
+
+    $format = '%uh %02um %02u.%03us';
+    $time = sprintf($format, $hours, $minutes, $seconds, $milliseconds);
+    return rtrim($time, '0');
+}
+
 $_id = $_GET['id'];
 $opts = get_option('ecapi_options');
 $dbms = new couchdb($opts['ecapi_config_db_url'], $opts['ecapi_config_db_name'], $opts['ecapi_config_db_username'],$opts['ecapi_config_db_password']);
@@ -7,6 +21,12 @@ $json = $json['data'];
 ?>
 <h1><?php print $_id ?></h1>
 <button class="button" onclick="window.location.href='?page=ecapi-config&action=edit&id=<?php print urlencode($_id) ?>'">Edit</button>
+<form action="" method="post" style="display:inline">
+	<input type="hidden" name="id" value="<?php print $_id ?>"/>
+	<input type="hidden" name="_rev" value="<?php print $json->_rev ?>"/>
+	<input type="hidden" name="page" value="ecapi-config"/>
+    <button class="button" name="action" value="delete" type="submit">Delete</button>
+</form>
 <table class="wp-list-table widefat">
 	<thead><tr><th>Field</th><th>Value</th></thead>
 	<tbody>
@@ -15,7 +35,7 @@ $json = $json['data'];
 <tr><th>type</th><td><?php print $json->type ?></td></tr>
 <tr><th>Query endpoint<small> - http://rdfs.org/ns/void#sparqlEndpoint</small></th><td><?php print $json->{"http://rdfs.org/ns/void#sparqlEndpoint"} ?></td></tr>
 <tr><th>mks:graph</th><td><?php print $json->{"mks:graph"} ?></td></tr>
-<tr><th>mks:cache-lifetime</th><td><?php print $json->{"mks:cache-lifetime"} ?></td></tr>
+<tr><th>mks:cache-lifetime</th><td><?php print formatLifetime($json->{"mks:cache-lifetime"}) ?></td></tr>
 <tr><th>debug</th><td><?php print isset($json->debug) && $json->debug ? 'yes' : 'no' ?></td></tr>
 <?php if( $json->{'catalogue-uuid'} ) : 
 	$uuid = $json->{'catalogue-uuid'};

@@ -4,6 +4,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 		case 'createtype':
 			include_once 'inc/config_createtype.inc';
 			break;
+		case 'delete':
+			include_once 'inc/config_delete.inc';
+			break;
 		case 'deletetype':
 			include_once 'inc/config_deletetype.inc';
 			break;
@@ -13,6 +16,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 		case 'savetype':
 			include_once 'inc/config_editsavetype.inc';
 			break;
+		default:
+			die('Unrecognised action');
 	}
 } elseif( array_key_exists('action', $_GET) ) {
 	switch($_GET['action']) {
@@ -26,7 +31,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 			include 'inc/config_edittype.phtml';
 			break;
 		case 'edit':
-			if( !isset($_GET['id']) ) die('No id parameter, nothing to view.');
+			if( !isset($_GET['id']) ) {} // Creating new
 			include 'inc/config_edit.phtml';
 			break;
 		case 'view':

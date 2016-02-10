@@ -56,13 +56,16 @@ foreach( listDatasetsDiocane() as $ds )
 			<input type="hidden" name="id" value="<?php echo $_id ?>">
 			<table class="wp-list-table widefat"><tbody>
 				<tr><th>_id</th>
-					<td><input type="text" placeholder="config doc id" size="64" name="rid" value="<?php echo $_id ?>" readonly></td>
+					<td><input type="text" placeholder="config doc id" size="64" name="rid" required<?php if( !empty($_id) ) print " readonly value=\"$_id\"" ?>></td>
 				</tr>
+<?php if( !empty($_id) ) : ?>
 				<tr><th>_rev</th>
 					<td><input type="text" placeholder="config doc id" size="64" name="_rev" value="<?php echo $docjson->_rev?>" readonly></td>
 				</tr>
+<?php endif; ?>
 				<tr><th>Dataset</th>
 					<td><select name="dataset-uuid">
+					<option value="">-- No dataset selected --</option>
 					<?php foreach($datasetz as $ds): ?>
 						<option value="<?php print $ds['uuid']?>"
 						<?php if($ds['uuid'] ==  $docjson->{"catalogue-uuid"}): ?>
@@ -77,17 +80,17 @@ foreach( listDatasetsDiocane() as $ds )
 					<td><input type="checkbox" name="debug" value="debug"<?php if( isset($docjson->debug) && $docjson->debug==TRUE ) print ' checked="checked"' ?>/></td>
 				</tr>
 				<tr><th>mks:cache-lifetime</th>
-					<td><input type="number" placeholder="in milliseconds" size="30" name="cache" value="<?php echo $docjson->{"mks:cache-lifetime"} ?>"/></td>
+					<td><input type="number" placeholder="in milliseconds" size="30" name="cache" value="<?php if( isset($docjson->{"mks:cache-lifetime"}) ) echo $docjson->{"mks:cache-lifetime"} ?>"/></td>
 				</tr>				
 				<tr><th>http://rdfs.org/ns/void#sparqlEndpoint</th>
-					<td><input type="text" placeholder="URL" size="64" name="endpoint" value="<?php echo $docjson->{"http://rdfs.org/ns/void#sparqlEndpoint"} ?>"/></td>
+					<td><input type="text" placeholder="URL" size="64" name="endpoint" value="<?php if( isset($docjson->{"http://rdfs.org/ns/void#sparqlEndpoint"}) ) echo $docjson->{"http://rdfs.org/ns/void#sparqlEndpoint"} ?>"/></td>
 				</tr>	
 				<tr><th>mks:graph</th>
-					<td><input type="text" placeholder="URI" size="64" name="graph" value="<?php echo $docjson->{"mks:graph"} ?>"/></td>
+					<td><input type="text" placeholder="URI" size="64" name="graph" value="<?php if( isset($docjson->{"mks:graph"}) ) echo $docjson->{"mks:graph"} ?>"/></td>
 				</tr>
 
 			</tbody></table>
-			<button class="button" name="reset" type="button" onclick="window.location.href='?page=ecapi-config&action=edit&id=<?php print urlencode($_id) ?>'">Reset</button>
+			<button class="button" name="reset" type="button" onclick="window.location.href='?page=ecapi-config&action=edit<?php if( !empty($_id) ) print "&id=" . urlencode($_id) ?>'">Reset</button>
 			<button class="button" name="action" value="save" type="submit">Save</button>
 		</form>
 	</div>

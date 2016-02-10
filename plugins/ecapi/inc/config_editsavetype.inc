@@ -30,10 +30,12 @@ foreach( $_POST as $a => $v)
 			$json->{"mks:types"}->$typeid->localise = \JShrink\Minifier::minify($js);
 			break;
 		case 'query_text':
-			$json->{"mks:types"}->$typeid->query_text = stripslashes($v);
+			$qtpl = stripslashes(trim($v));
+			if( !empty($qtpl) ) $json->{"mks:types"}->$typeid->query_text = $qtpl;
 			break;
 		case 'fetch_query':
-			$json->{"mks:types"}->$typeid->fetch_query = stripslashes($v);
+			$q = stripslashes(trim($v));
+			if( !empty($q) ) $json->{"mks:types"}->$typeid->fetch_query = $q;
 			break;
 	}
 $response = $dbms->saveDoc( $_id, $json );
