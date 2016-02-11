@@ -1,4 +1,16 @@
-[insert_php]$opts = get_option('ecapi_options');[/insert_php] 
+[insert_php]
+$opts = get_option('ecapi_options');
+// load footer scripts
+wp_enqueue_script('highlight');
+wp_enqueue_script('jquery-slideto');
+wp_enqueue_script('jquery-wiggle');
+wp_enqueue_script('jquery-ba-bbq');
+wp_enqueue_script('handlebars');
+wp_enqueue_script('marked');
+wp_enqueue_script('jsoneditor');
+wp_enqueue_script('swagger-client');
+wp_enqueue_script('swagger-ui');
+[/insert_php] 
 <section>Alongside obtaining data by <a title="Reading Feeds: the Developers’ API" href="/developers-api/">reading feeds</a>, the MK Data Hub provides an interface for reading streams of integrated data that are aggregated from a multitude of datasets registered with the Data Catalogue. The aggregation logic revolves around presenting all the data that the user has access to regarding a specific <em>entity</em> (e.g. a location in Milton Keynes). This way, the user is not required to specify the URL or name of a data source or feed. This document is a guide for developers who do not require to tweak their data-intensive applications to use specific data-sources.</section>
 &nbsp;
 <section>
@@ -88,10 +100,7 @@ All the services return bespoke, simple JSON, aggregating information from multi
 }</pre>
 </section>
 <script type="text/javascript">// <![CDATA[
-(function($){$(function(){var url='[insert_php]
-$opts = get_option('ecapi_options');
-echo $opts['ecapi_swagger'];
-[/insert_php]';window.swaggerUi=new SwaggerUi({url:url,dom_id:"swagger-ui-container",supportedSubmitMethods:['get','post','put','delete'],onComplete:function(swaggerApi,swaggerUi){if(typeof initOAuth=="function"){}
-$('pre code').each(function(i,e){hljs.highlightBlock(e)})},onFailure:function(data){console.log(data)},docExpansion:"list",sorter:"alpha"});window.swaggerUi.load()});
+(function($){$(function(){var url='[insert_php]echo $opts['ecapi_swagger'];[/insert_php]';window.swaggerUi=new SwaggerUi({url:url,dom_id:"swagger-ui-container",supportedSubmitMethods:['get','post','put','delete'],onComplete:function(swaggerApi,swaggerUi){if(typeof initOAuth=="function"){}
+$('pre code').each(function(i,e){hljs.highlightBlock(e)});},onFailure:function(data){console.log(data);},docExpansion:"list",sorter:"alpha"});window.swaggerUi.load();});
 })(window.jQuery);
 // ]]></script>

@@ -234,7 +234,7 @@ function add_scripts(){
 }
 
 function wptuts_scripts_with_the_lot() {
-    $plugdir = dirname(__FILE__) . '/ecapi'; // Stupid Wordpress function plugins_url going bananas
+    $plugdir = dirname(__FILE__) . '/ecapi'; // Stupid WordPress function plugins_url going bananas
     $bow = 'vendor/bower';
 
     // Underscore and Backbone need to be in the head for Swagger to work
@@ -243,27 +243,27 @@ function wptuts_scripts_with_the_lot() {
     $scripts_head = array(
     	array( 'underscore'    , "$bow/swagger-ui/dist/lib/underscore-min.js"    , array() ),
     	array( 'backbone'      , "$bow/swagger-ui/dist/lib/backbone-min.js"      , array() ),
-    	array( 'highlight'     , "$bow/swagger-ui/dist/lib/highlight.7.3.pack.js", array() ),
     	array( 'jquery-blockui', "$bow/blockui/jquery.blockUI.js"                , array('jquery') ),
     	array( 'typeahead.js'  , "$bow/typeahead.js/dist/typeahead.bundle.min.js", array('jquery') ),
+    );
+    $scripts_foot = array(
+    	array( 'highlight'     , "$bow/swagger-ui/dist/lib/highlight.7.3.pack.js", array() ),
     	array( 'jquery-slideto', "$bow/swagger-ui/dist/lib/jquery.slideto.min.js", array('jquery') ),
     	array( 'jquery-wiggle' , "$bow/swagger-ui/dist/lib/jquery.wiggle.min.js" , array('jquery') ),
     	array( 'jquery-ba-bbq' , "$bow/swagger-ui/dist/lib/jquery.ba-bbq.min.js" , array('jquery') ),
-    );
-    $scripts_foot = array(
-    	array( 'handlebars'    , "$bow/swagger-ui/dist/lib/handlebars-2.0.0.js" , array('jquery'), '2.0.0' ),
-    	array( 'marked'        , "$bow/swagger-ui/dist/lib/marked.js"           , array('jquery'), FALSE ),
-    	array( 'jsoneditor'    , "$bow/swagger-ui/dist/lib/jsoneditor.min.js"   , array('jquery'), '7.3' ),
-    	array( 'swagger-client', "$bow/swagger-js/browser/swagger-client.min.js", array(), '2.1' ),
-    	array( 'swagger-ui'    , "$bow/swagger-ui/dist/swagger-ui.min.js"       , array('swagger-client','handlebars','marked','jsoneditor'), '2.1' ),
+    	array( 'handlebars'    , "$bow/swagger-ui/dist/lib/handlebars-2.0.0.js"  , array('jquery'), '2.0.0' ),
+    	array( 'marked'        , "$bow/swagger-ui/dist/lib/marked.js"            , array('jquery'), FALSE ),
+    	array( 'jsoneditor'    , "$bow/swagger-ui/dist/lib/jsoneditor.min.js"    , array('jquery'), '7.3' ),
+    	array( 'swagger-client', "$bow/swagger-js/browser/swagger-client.min.js" , array(), '2.1' ),
+    	array( 'swagger-ui'    , "$bow/swagger-ui/dist/swagger-ui.min.js"        , array('swagger-client','handlebars','marked','jsoneditor'), '2.1' ),
     );
 
     foreach( $scripts_head as $k => $v )
     	wp_register_script( $v[0], plugins_url($v[1], $plugdir), $v[2] );
     foreach( $scripts_foot as $k => $v )
     	wp_register_script( $v[0], plugins_url($v[1], $plugdir), $v[2], $v[3], TRUE );
+	// Load header scripts for all (for now)
     foreach( $scripts_head as $k => $v ) wp_enqueue_script($v[0]);
-    foreach( $scripts_foot as $k => $v ) wp_enqueue_script($v[0]);
 }
 
 /**
