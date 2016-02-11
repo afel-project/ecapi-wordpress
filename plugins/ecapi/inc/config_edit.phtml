@@ -2,38 +2,6 @@
     
 <?php
 
-function listDatasetsDiocane(){
-	$dacc = MKSDC_DataAccess::instance();
-	$type = 'mksdc-datasets';
-	$args=array(
-		'post_type' => $type,
-		'post_status' => 'publish',
-		'posts_per_page' => -1,
-		'ignore_sticky_posts'=> 1
-	);
-	$my_query = new WP_Query($args);
-	$datasets = array();
-	while ($my_query->have_posts()) {
-		$my_query->the_post();
-		$tags = get_the_tags();
-		array_push($datasets, array(
-			'uuid' => $dacc->getDatasetUUIDByPostId(get_the_id()),
-			'permalink' => get_the_permalink(),
-			'post_title' => get_the_title()
-		));
-	}
-	wp_reset_query();
-	
-	function cmpa($a, $b)
-	{
-		return strcmp($a['post_title'], $b['post_title']);
-	}
-
-	usort($datasets, "cmpa");
-	
-	return $datasets;
-}
-
 $_id = $_GET['id'];
 $opts = get_option('ecapi_options');
 $dbms = new couchdb(

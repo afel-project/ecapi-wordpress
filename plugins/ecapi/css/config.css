@@ -1,0 +1,8 @@
+table.datasets { border-collapse: collapse; margin-top:20px; width:95% }
+table.datasets tbody tr { border-top: 1px solid #aaa }
+table.datasets tbody tr td { padding: 5px 3px 10px }
+table.datasets th { text-align: left }
+table.datasets .ds_endpoint { font-size: 0.9em }
+table.datasets .ds_entry a { font-weight: bold }
+table.datasets .ds_entry .ds_meta { font-size: 0.8em; margin-left: 10px }
+table.datasets .ds_status { font-size: 1.8em; text-align: center }

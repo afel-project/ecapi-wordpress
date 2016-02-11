@@ -3,7 +3,7 @@
 Plugin Name: MKS Entity-Centric API Management
 Description: Utilities for accessing, testing and configuring an Entity-Centric API from a WordPress installation
 Plugin URI: http://github.com/mk-smart/ecapi-wordpress
-Version: 0.1.0
+Version: 0.1.1
 Author: Alessandro Adamou
 Author URI: http://kmi.open.ac.uk/people/member/alessandro-adamou
 */
@@ -157,6 +157,7 @@ function ecapi_admin_intercept() {
 
 function ecapi_config_page() {
     require_once dirname(__FILE__) . '/inc/ecapiconfigform/couchdb.class.php';
+    require_once dirname(__FILE__) . '/lib/catalogue.php';
 	include dirname(__FILE__) . '/config.php';
 }
 
@@ -222,6 +223,7 @@ function ecapi_setting_url() {
 function add_scripts(){
     $plugdir = dirname(__FILE__) . '/ecapi'; // Stupid Wordpress function plugins_url going bananas
     $scripts_head = array(
+    	array( 'ecapi-conf', 'js/config.js', array() ),
     	array( 'prism', 'vendor/bower/prism/prism.js', array() )
     );
     foreach( $scripts_head as $k => $v )
@@ -229,7 +231,9 @@ function add_scripts(){
     foreach( $scripts_head as $k => $v )
     	wp_enqueue_script($v[0]);
     
+    wp_register_style('ecapi_conf', plugins_url('css/config.css', $plugdir), array(), FALSE, 'all');
     wp_register_style('prism', plugins_url('vendor/bower/prism/themes/prism.css', $plugdir), array(), '20120208', 'all');
+    wp_enqueue_style('ecapi_conf');
     wp_enqueue_style('prism');
 }
 

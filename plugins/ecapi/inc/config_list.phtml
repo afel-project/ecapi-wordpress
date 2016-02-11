@@ -5,21 +5,60 @@ $dbms = new couchdb(
 	$opts['ecapi_config_db_username'], $opts['ecapi_config_db_password']
 );
 $json = $dbms->getDoc('datasets', '/_design/catalogue/_view/');
+$uuids = array();
+foreach( listDatasetsDiocane() as $ds ) $uuids []= $ds['uuid'];
+
+$type_support = array();
+$typemaps = $dbms->getDoc('typemaps', '/_design/compile/_view/');
+foreach( $typemaps['data']->rows as $row ) {
+	if( isset($row->value->dataset) ) $type_support[$row->value->dataset] []= $row->key;
+}
 ?>
-<table>
+<div style="position:relative">
+<button class="button" onclick="window.location.href='?page=ecapi-config&action=edit'" style="position:absolute;right:30px;top:-40px">Add Configuration</button>
+
+<table class="datasets" id="configurations">
   <thead><tr>
-    <td>ID</id>
-	<td>Endpoint</id>
+    <th>Configuration ID</th>
+	<th>Service endpoint</th>
+	<th>Linked</th>
   </tr></thead>
   <tbody>
 <?php foreach( $json['data']->rows as $row ) : ?>
     <tr>
-	  <td><a href="?page=ecapi-config&action=view&id=<?php print urlencode($row->id) ?>"><?php print $row->id ?></a></td>
-	  <td><?php print $row->value->service_url ?></td>
+	  <td class="ds_entry">
+	  	<a href="?page=ecapi-config&action=view&id=<?php print urlencode($row->id) ?>" title="<?php print $row->id ?>"><?php print $row->id ?></a>
+	  	<div class="ds_meta">
+<?php if( isset($type_support[$row->id]) ) {
+	$ar = $type_support[$row->id];
+	sort($ar);
+	print "supports: ";
+	for( $i = 0; $i < count($ar); $i++ ) {
+		if( $i > 0 ) print ', ';
+		$expl = explode( '/', $ar[$i] );
+		$s = end($expl);
+		print "<strong>$s</strong>";
+	}
+} ?>
+	  	</div>
+	  </td>
+	  <td class="ds_endpoint"><?php print $row->value->service_url ?></td>
+	  <td class="ds_status">
+<?php if( isset($row->value->catalogue_uuid) ) 
+	print in_array( $row->value->catalogue_uuid, $uuids ) ? "&#10004;" : "&#x26a0;"; 
+?>
+	  </td>
     </tr>
 <?php endforeach; ?>
   </tbody>
 </table>
+</div>
 
 <hr/>
-<button class="button" onclick="window.location.href='?page=ecapi-config&action=edit'" style="float:right">Add New</button>
+
+<script>
+jQuery('table#configurations td a').each(function(i,item){
+	var text = jQuery(this).text();
+	jQuery(this).text(shortUrl(text,80));
+});
+</script>
