@@ -265,7 +265,7 @@ function wptuts_scripts_with_the_lot() {
     foreach( $scripts_head as $k => $v )
     	wp_register_script( $v[0], plugins_url($v[1], $plugdir), $v[2] );
     foreach( $scripts_foot as $k => $v )
-    	wp_register_script( $v[0], plugins_url($v[1], $plugdir), $v[2], $v[3], TRUE );
+    	wp_register_script( $v[0], plugins_url($v[1], $plugdir), $v[2], array_key_exists(3, $v) ? $v[3] : FALSE, TRUE );
 	// Load header scripts for all (for now)
     foreach( $scripts_head as $k => $v ) wp_enqueue_script($v[0]);
 }
