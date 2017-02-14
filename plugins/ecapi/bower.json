@@ -5,6 +5,7 @@
         "prism"       : "1.4.*",
         "swagger-js"  : "2.1.*",
         "swagger-ui"  : "2.1.*",
-        "typeahead.js": "0.11.*"
+        "typeahead.js": "0.11.*",
+        "underscore"  : "1.8.3"
     }
 }

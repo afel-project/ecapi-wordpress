@@ -245,7 +245,7 @@ function wptuts_scripts_with_the_lot() {
     wp_deregister_script('underscore');
     wp_deregister_script('backbone');
     $scripts_head = array(
-    	array( 'underscore'    , "$bow/swagger-ui/dist/lib/underscore-min.js"    , array() ),
+    	array( 'underscore'    , "$bow/underscore/underscore-min.js"             , array() ),
     	array( 'backbone'      , "$bow/swagger-ui/dist/lib/backbone-min.js"      , array() ),
     	array( 'jquery-blockui', "$bow/blockui/jquery.blockUI.js"                , array('jquery') ),
     	array( 'typeahead.js'  , "$bow/typeahead.js/dist/typeahead.bundle.min.js", array('jquery') ),
